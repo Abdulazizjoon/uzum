@@ -1,34 +1,6 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import React from "react";
 
-
-
-function Details() {
-  let [data, setData] = useState([]);
-  let [id, setId] = useState();
-    let [counter, setCounter] = useState(0);
-    let dispatch=useDispatch()
-
-  useEffect(() => {
-    setId(localStorage.getItem("id"));
-  }, []);
-
-  useEffect(() => {
-    if (id) {
-      axios
-        .get(`https://dummyjson.com/product/${id}`)
-        .then((response) => {
-          setData(response.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  }, [id]);
-
-  console.log(data);
-
+function Card() {
   return (
     <div>
       <div className="flex mt-2 mx-auto container w-[1200px] items-center justify-between px-4 py-2">
@@ -112,43 +84,62 @@ function Details() {
           </ul>
         </div>
       </div>
-      {data && (
-        <div className="mx-auto container gap-5 flex w-[1200px]">
-          <div className="w-[65%]">
-            <div>
-              <h2 className="text-xl font-semibold">{data.description}</h2>
-              <div className="mt-5 flex items-center">
-                <div className="flex mr-6 gap-1">
-                  <i className="fa-solid fa-star text-[#F5A623]"></i>
-                  <i className="fa-solid fa-star text-[#F5A623]"></i>
-                  <i className="fa-solid fa-star text-[#F5A623]"></i>
-                  <i className="fa-solid fa-star text-[#F5A623]"></i>
-                </div>
-                <div className="text-[#7E818C] flex">
-                  <p>
-                    {data.rating} ({data?.reviews && data.reviews.length} sharh)
-                  </p>
-                  <p className="ml-2">
-                    {data?.images && data.images.length} fotosurat
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="flex gap-10">
-              <img src={data?.images?.[0]} className="w-[500px]" alt="" />
-              <button
-                onClick={() => dispatch(addToCart(data))}
-                className="w-3xs bg-[#7000FF] h-10 mt-40 rounded-md cursor-pointer text-white"
-              >
-                Savatga qoʻshish
-              </button>
+      <div className="max-w-4xl mx-auto p-6 space-y-4">
+        <h2 className="text-2xl font-bold">Savat</h2>
+
+        <div className="bg-white p-4 rounded-lg shadow-md flex items-center gap-4">
+          <input
+            type="checkbox"
+            className="w-5 h-5 text-purple-600"
+            defaultChecked
+          />
+          <img
+            src="https://via.placeholder.com/80"
+            alt="Fairy Limon"
+            className="w-16 h-16 rounded"
+          />
+          <div className="flex flex-col flex-1">
+            <span className="text-gray-500 text-sm">Uzum Market omborida</span>
+            <span className="font-semibold text-lg">
+              Idish yuvish uchun Fairy, Limon, 450ml
+            </span>
+            <span className="text-gray-500 text-sm">
+              Sotuvchi: The Procter & Gamble Company
+            </span>
+            <div className="flex items-center mt-2">
+              <button className="px-3 py-1 border rounded">-</button>
+              <span className="mx-3">1</span>
+              <button className="px-3 py-1 border rounded">+</button>
             </div>
           </div>
-          <div className="w-[35%]"></div>
+          <div className="text-right">
+            <span className="text-lg font-bold text-purple-600">
+              14 990 so'm
+            </span>
+            <span className="block text-gray-400 line-through">
+              25 990 so'm
+            </span>
+          </div>
         </div>
-      )}
+
+        <div className="bg-white p-4 rounded-lg shadow-md">
+          <h3 className="text-lg font-semibold">Buyurtmangiz</h3>
+          <div className="flex justify-between text-gray-600 mt-2">
+            <span>Mahsulotlar (1):</span>
+            <span>25 990 so'm</span>
+          </div>
+          <div className="flex justify-between font-bold text-xl mt-2">
+            <span>Jami:</span>
+            <span className="text-purple-600">14 990 so'm</span>
+          </div>
+          <p className="text-green-600 mt-1">Tejovingiz: 11 000 so'm</p>
+          <button className="w-full bg-purple-600 text-white py-2 rounded-lg mt-4 hover:bg-purple-700 transition">
+            Rasmiylashtirishga o'tish
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
 
-export default Details;
+export default Card;
