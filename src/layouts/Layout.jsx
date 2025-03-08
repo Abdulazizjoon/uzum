@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "./Header";
 
-function layout({ children }) {
+function Layout({ children }) {
   return (
     <div>
       <div>
@@ -12,4 +12,4 @@ function layout({ children }) {
   );
 }
 
-export default layout;
+export default Layout;
