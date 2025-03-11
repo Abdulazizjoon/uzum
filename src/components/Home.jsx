@@ -3,15 +3,18 @@ import React, { useEffect, useState } from "react";
 import card from "../img/card.svg";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import { addToCart } from "../store/card";
-import { useDispatch } from "react-redux";
+import { addToCart, removeFromCart } from "../store/card";
+import { useDispatch, useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
 function Home() {
   let [data, setData] = useState([]);
   let [skip, setSkip] = useState(12);
   let [like, setLike] = useState([]);
-  let navigation=useNavigate()
-  let dispatch=useDispatch()
+  let navigation = useNavigate();
+  let dispatch = useDispatch();
+  let cards = useSelector((state) => state.cart.cartItems);
+  console.log(cards);
+  
 
   useEffect(
     function () {
@@ -33,7 +36,7 @@ function Home() {
   function cart() {
     navigation("/card");
   }
-  function lik(e,id) {
+  function lik(e, id) {
     // e.stopPropagation();
 
     if (like.includes(id)) {
@@ -43,14 +46,14 @@ function Home() {
     }
   }
   function details(id) {
-    navigation(`/details/${id}`)
-    localStorage.setItem('id',id)
+    navigation(`/details/${id}`);
+    localStorage.setItem("id", id);
   }
   function notify() {
     // event.stopPropagation();
     toast.success("mahsulot savatga qoshildi");
   }
-  
+
   return (
     <div>
       <div className="flex mt-2 mx-auto container w-[1200px] items-center justify-between px-4 py-2">
@@ -79,9 +82,40 @@ function Home() {
             <i className="fa-regular fa-heart"></i>
             <span className="mr-8 ml-2.5">Saralangan</span>
           </div>
-          <div className="cursor-pointer" onClick={cart}>
-            <i className="fa-solid fa-bag-shopping"></i>
-            <span className="mr-8 ml-2.5">Savat</span>
+          <div className="relative group">
+            <div class="w-96 mx-auto hidden absolute bg-white shadow-lg rounded-2xl p-4 group-hover:block z-10 right-8 top-5">
+              {cards && cards.map((value,index) => {
+                return (
+                  <div
+                    key={index}
+                    class="flex items-center justify-between border-b pb-3 mb-3"
+                  >
+                    <img
+                      src={value.images[0]}
+                      class="w-12 h-12 rounded-md object-cover"
+                    />
+                    <div class="flex-1 ml-4">
+                      <p class="text-sm font-semibold">{value.title}</p>
+                      <p class="text-xs text-gray-500">{value.price} so'm</p>
+                    </div>
+                    <button class="text-gray-400 hover:text-gray-600">
+                      <i
+                        class="fa-solid fa-trash cursor-pointer"
+                        onClick={() => dispatch(removeFromCart(value.id))}
+                      ></i>
+                    </button>
+                  </div>
+                );
+              })}
+
+              <button class="w-full bg-purple-600 cursor-pointer text-white text-sm font-semibold py-3 rounded-md mt-4">
+                Buyurtmani rasmiylashtirish
+              </button>
+            </div>
+            <div className="cursor-pointer relative group" onClick={cart}>
+              <i className="fa-solid fa-bag-shopping"></i>
+              <span className="mr-8 ml-2.5">Savat</span>
+            </div>
           </div>
         </div>
       </div>
@@ -148,9 +182,9 @@ function Home() {
                 <i className="fa-solid fa-heart absolute top-5 right-5 text-red-500"></i>
               ) : (
                 <i
-                    onClick={(event) => {
-                      lik(data.id)
-                      // event.stopPropagation();
+                  onClick={(event) => {
+                    lik(data.id);
+                    // event.stopPropagation();
                   }}
                   className="fa-regular absolute top-5 right-5 fa-heart"
                 ></i>

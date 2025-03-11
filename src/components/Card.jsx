@@ -10,22 +10,19 @@ import axios from "axios";
 function Card() {
   let cart = useSelector((state) => state.cart.cartItems);
   let dispatch = useDispatch();
-  let [data,setData]=useState([])
+  let [data, setData] = useState([]);
 
   let navigate = useNavigate();
-  useEffect(
-    function () {
-      axios
-        .get(`https://dummyjson.com/products`)
-        .then((response) => {
-          return setData(response.data.products);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    []
-  );
+  useEffect(function () {
+    axios
+      .get(`https://dummyjson.com/products`)
+      .then((response) => {
+        return setData(response.data.products);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
   function hom() {
     navigate("/");
   }
@@ -126,7 +123,7 @@ function Card() {
       <div className="w-7xl mx-auto p-6 space-y-4">
         <h2 className="text-2xl font-bold">Savat</h2>
 
-        <div className="flex gap-5 relative w-full">
+        <div className="flex gap-5 w-full">
           <div>
             {cart?.length > 0 ? (
               cart.map((item) => (
@@ -184,7 +181,7 @@ function Card() {
             )}
           </div>
           {cart?.length > 0 && (
-            <div className="w-[30%] fixed right-32">
+            <div className="w-[30%]">
               <div className="bg-white p-4 rounded-lg shadow-md mt-5">
                 <div className="flex items-center gap-1">
                   <i class="fa-regular fa-thumbs-up text-2xl text-[#8B5EFF] mr-1.5"></i>
@@ -199,22 +196,12 @@ function Card() {
               <div className="bg-white p-4 rounded-lg shadow-md mt-5">
                 <h3 className="text-lg font-semibold">Buyurtmangiz</h3>
                 <div className="flex justify-between text-gray-600 mt-2">
-                  <span>Mahsulotlar ({cart.length}):</span>
-                  <span>
-                    {cart
-                      .reduce((total, item) => total + item.price, 0)
-                      .toLocaleString()}{" "}
-                    so'm
-                  </span>
+                  <span>Mahsulotlar 4:</span>
+                  <span>100000 so'm</span>
                 </div>
                 <div className="flex justify-between font-bold text-xl mt-2">
                   <span>Jami:</span>
-                  <span className="text-purple-600">
-                    {cart
-                      .reduce((total, item) => total + item.price, 0)
-                      .toLocaleString()}{" "}
-                    so'm
-                  </span>
+                  <span className="text-purple-600">99999 so'm</span>
                 </div>
                 <button className="w-full bg-purple-600 text-white py-2 rounded-lg mt-4 cursor-pointer transition">
                   Rasmiylashtirishga o'tish
@@ -231,7 +218,7 @@ function Card() {
             <div
               onClick={() => details(data.id)}
               key={data.id}
-              className="mx-auto scale-3d relative bg-white rounded-2xl hover:shadow-xl w-[250px] mb-6 shadow cursor-pointer border-gray-200"
+              className="mx-auto bg-white rounded-2xl hover:shadow-xl w-[250px] mb-6 shadow cursor-pointer border-gray-200"
             >
               <img src={data.images[0]} alt="" className="w-full h-[200px]" />
               <i className="fa-regular absolute top-5 right-5 fa-heart"></i>
