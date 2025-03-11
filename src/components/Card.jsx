@@ -15,7 +15,7 @@ function Card() {
   let navigate = useNavigate();
   useEffect(function () {
     axios
-      .get(`https://dummyjson.com/products`)
+      .get(`https://dummyjson.com/products?limit=12&skip=10`)
       .then((response) => {
         return setData(response.data.products);
       })
