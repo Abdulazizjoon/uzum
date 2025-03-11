@@ -14,7 +14,6 @@ function Home() {
   let dispatch = useDispatch();
   let cards = useSelector((state) => state.cart.cartItems);
   console.log(cards);
-  
 
   useEffect(
     function () {
@@ -84,29 +83,30 @@ function Home() {
           </div>
           <div className="relative group">
             <div class="w-96 mx-auto hidden absolute bg-white shadow-lg rounded-2xl p-4 group-hover:block z-10 right-8 top-5">
-              {cards && cards.map((value,index) => {
-                return (
-                  <div
-                    key={index}
-                    class="flex items-center justify-between border-b pb-3 mb-3"
-                  >
-                    <img
-                      src={value.images[0]}
-                      class="w-12 h-12 rounded-md object-cover"
-                    />
-                    <div class="flex-1 ml-4">
-                      <p class="text-sm font-semibold">{value.title}</p>
-                      <p class="text-xs text-gray-500">{value.price} so'm</p>
+              {cards &&
+                cards.map((value, index) => {
+                  return (
+                    <div
+                      key={index}
+                      class="flex items-center justify-between border-b pb-3 mb-3"
+                    >
+                      <img
+                        src={value.images[0]}
+                        class="w-12 h-12 rounded-md object-cover"
+                      />
+                      <div class="flex-1 ml-4">
+                        <p class="text-sm font-semibold">{value.title}</p>
+                        <p class="text-xs text-gray-500">{value.price.toFixed(2)} so'm</p>
+                      </div>
+                      <button class="text-gray-400 hover:text-gray-600">
+                        <i
+                          class="fa-solid fa-trash cursor-pointer"
+                          onClick={() => dispatch(removeFromCart(value.id))}
+                        ></i>
+                      </button>
                     </div>
-                    <button class="text-gray-400 hover:text-gray-600">
-                      <i
-                        class="fa-solid fa-trash cursor-pointer"
-                        onClick={() => dispatch(removeFromCart(value.id))}
-                      ></i>
-                    </button>
-                  </div>
-                );
-              })}
+                  );
+                })}
 
               <button class="w-full bg-purple-600 cursor-pointer text-white text-sm font-semibold py-3 rounded-md mt-4">
                 Buyurtmani rasmiylashtirish
@@ -203,8 +203,8 @@ function Home() {
                       {data.price} so'm
                     </p>
                     <p className="text-lg font-bold">
-                      {data.price -
-                        data.price * (data.discountPercentage / 100)}
+                      {(data.price -
+                        data.price * (data.discountPercentage / 100)).toFixed(2)}
                     </p>
                   </div>
                   <button
