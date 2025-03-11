@@ -2,11 +2,16 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import card from "../img/card.svg";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import { addToCart } from "../store/card";
+import { useDispatch } from "react-redux";
+import "react-toastify/dist/ReactToastify.css";
 function Home() {
   let [data, setData] = useState([]);
   let [skip, setSkip] = useState(12);
   let [like, setLike] = useState([]);
   let navigation=useNavigate()
+  let dispatch=useDispatch()
 
   useEffect(
     function () {
@@ -25,17 +30,27 @@ function Home() {
   function skipp() {
     setSkip((skip += 12));
   }
-  function lik(id) {
-   if (like.includes(id)) {
-     setLike((prevLike) => prevLike.filter((item) => item !== id));
-   } else {
-     setLike((prevLike) => [...prevLike, id]);
-   }
+  function cart() {
+    navigation("/card");
+  }
+  function lik(e,id) {
+    // e.stopPropagation();
+
+    if (like.includes(id)) {
+      setLike((prevLike) => prevLike.filter((item) => item !== id));
+    } else {
+      setLike((prevLike) => [...prevLike, id]);
+    }
   }
   function details(id) {
     navigation(`/details/${id}`)
     localStorage.setItem('id',id)
   }
+  function notify() {
+    // event.stopPropagation();
+    toast.success("mahsulot savatga qoshildi");
+  }
+  
   return (
     <div>
       <div className="flex mt-2 mx-auto container w-[1200px] items-center justify-between px-4 py-2">
@@ -64,7 +79,7 @@ function Home() {
             <i className="fa-regular fa-heart"></i>
             <span className="mr-8 ml-2.5">Saralangan</span>
           </div>
-          <div className="cursor-pointer">
+          <div className="cursor-pointer" onClick={cart}>
             <i className="fa-solid fa-bag-shopping"></i>
             <span className="mr-8 ml-2.5">Savat</span>
           </div>
@@ -120,9 +135,11 @@ function Home() {
         </div>
       </div>
       <div className="mx-auto container w-[1200px]">
+        <ToastContainer />
         <div className="p-6 flex flex-wrap">
           {data.map((data) => (
-            <div onClick={()=>details(data.id)}
+            <div
+              onClick={() => details(data.id)}
               key={data.id}
               className="mx-auto scale-3d relative bg-white rounded-2xl hover:shadow-xl w-[250px] mb-6 shadow cursor-pointer border-gray-200"
             >
@@ -131,7 +148,10 @@ function Home() {
                 <i className="fa-solid fa-heart absolute top-5 right-5 text-red-500"></i>
               ) : (
                 <i
-                  onClick={() => lik(data.id)} 
+                    onClick={(event) => {
+                      lik(data.id)
+                      // event.stopPropagation();
+                  }}
                   className="fa-regular absolute top-5 right-5 fa-heart"
                 ></i>
               )}
@@ -153,7 +173,14 @@ function Home() {
                         data.price * (data.discountPercentage / 100)}
                     </p>
                   </div>
-                  <button className="border mt-4 rounded-full w-8 h-8 text-[#BDBEC4]">
+                  <button
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      dispatch(addToCart(data));
+                      notify(event);
+                    }}
+                    className="border mt-4 rounded-full w-8 h-8 text-[#BDBEC4]"
+                  >
                     <img className="ml-[3px]" src={card} alt="" />
                   </button>
                 </div>

@@ -32,15 +32,18 @@ function Details() {
     navigate("/card");
   }
   function notify() {
-     toast.success('mahsulot savatga qoshildi')
+    toast.success("mahsulot savatga qoshildi");
   }
   console.log(data);
+  function hom() {
+    navigation("/");
+  }
 
   return (
     <div>
       <div className="flex mt-2 mx-auto container w-[1200px] items-center justify-between px-4 py-2">
         <div className="flex items-center space-x-2">
-          <span className="text-xl font-bold text-purple-700">uzum market</span>
+          <span onClick={hom} className="text-xl font-bold text-purple-700">uzum market</span>
         </div>
         <div className="flex relative space-x-4">
           <button className="px-4 py-2 bg-purple-100 text-purple-700 rounded-lg">

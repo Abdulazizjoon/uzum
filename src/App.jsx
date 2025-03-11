@@ -1,9 +1,10 @@
-import React from 'react'
-import { Route, Routes } from 'react-router-dom'
-import Home from './components/Home'
-import Layout from './layouts/Layout';
-import Details from './components/Details';
-import Card from './components/Card';
+import React from "react";
+import { Route, Routes } from "react-router-dom";
+import Home from "./components/Home";
+import Layout from "./layouts/Layout";
+import Details from "./components/Details";
+import Card from "./components/Card";
+import ErorPage from "./components/ErorPage";
 
 function App() {
   return (
@@ -33,9 +34,17 @@ function App() {
             </Layout>
           }
         ></Route>
+        <Route
+          path="*"
+          element={
+            <Layout>
+              <ErorPage></ErorPage>
+            </Layout>
+          }
+        ></Route>
       </Routes>
     </div>
   );
 }
 
-export default App
+export default App;
