@@ -36,7 +36,7 @@ function Details() {
   }
   console.log(data);
   function hom() {
-    navigation("/");
+    navigate("/");
   }
 
   return (

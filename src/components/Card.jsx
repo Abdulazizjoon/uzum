@@ -1,16 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { removeFromCart } from "../store/card"; 
+import { removeFromCart } from "../store/card";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import card from "../img/card.svg";
+
+import axios from "axios";
 
 function Card() {
-  const cart = useSelector((state) => state.cart.cartItems); 
-  const dispatch = useDispatch();
+  let cart = useSelector((state) => state.cart.cartItems);
+  let dispatch = useDispatch();
+  let [data,setData]=useState([])
 
-  let navigate=useNavigate()
-
+  let navigate = useNavigate();
+  useEffect(
+    function () {
+      axios
+        .get(`https://dummyjson.com/products`)
+        .then((response) => {
+          return setData(response.data.products);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    []
+  );
   function hom() {
-    navigate('/')
+    navigate("/");
+  }
+  function details(id) {
+    navigation(`/details/${id}`);
+    localStorage.setItem("id", id);
+  }
+  function notify() {
+    // event.stopPropagation();
+    toast.success("mahsulot savatga qoshildi");
   }
 
   return (
@@ -197,6 +222,52 @@ function Card() {
               </div>
             </div>
           )}
+        </div>
+      </div>
+      <div className="mx-auto container w-[1200px]">
+        <ToastContainer />
+        <div className="p-6 flex flex-wrap">
+          {data.map((data) => (
+            <div
+              onClick={() => details(data.id)}
+              key={data.id}
+              className="mx-auto scale-3d relative bg-white rounded-2xl hover:shadow-xl w-[250px] mb-6 shadow cursor-pointer border-gray-200"
+            >
+              <img src={data.images[0]} alt="" className="w-full h-[200px]" />
+              <i className="fa-regular absolute top-5 right-5 fa-heart"></i>
+
+              <div className="p-4">
+                <p className="text-xs mt-2 line-clamp-2">{data.description}</p>
+                <div className="text-[12px] flex items-center gap-1">
+                  <i className="fa-solid fa-star text-[#FFB54C]"></i>
+                  <p className="text-gray-600">
+                    {data.rating} ({data.stock} otziv)
+                  </p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="items-center justify-between mt-3">
+                    <p className="text-gray-400 text-sm line-through">
+                      {data.price} so'm
+                    </p>
+                    <p className="text-lg font-bold">
+                      {data.price -
+                        data.price * (data.discountPercentage / 100)}
+                    </p>
+                  </div>
+                  <button
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      dispatch(addToCart(data));
+                      notify(event);
+                    }}
+                    className="border mt-4 rounded-full w-8 h-8 text-[#BDBEC4]"
+                  >
+                    <img className="ml-[3px]" src={card} alt="" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
