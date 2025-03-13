@@ -6,6 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { addToCart, removeFromCart } from "../store/card";
 import { useDispatch, useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
+
 function Home() {
   let [data, setData] = useState([]);
   let [skip, setSkip] = useState(12);
@@ -15,6 +16,23 @@ function Home() {
   let cards = useSelector((state) => state.cart.cartItems);
   console.log(cards);
 
+  const slides = [
+    "https://images.uzum.uz/cv3eg7ei4n36ls3t0770/main_page_banner.jpg",
+    "https://images.uzum.uz/cug7q9tht56sc95cis1g/main_page_banner.jpg",
+    "https://images.uzum.uz/cv4o265pb7f9qcng1frg/main_page_banner.jpg",
+    "https://images.uzum.uz/cuuoplei4n36ls3rla6g/main_page_banner.jpg",
+    "https://images.uzum.uz/cuuljv3vgbkm5ehgnhcg/main_page_banner.jpg",
+  ];
+
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % slides.length);
+    }, 3500);
+
+    return () => clearInterval(interval);
+  }, []);
   useEffect(
     function () {
       axios
@@ -96,7 +114,9 @@ function Home() {
                       />
                       <div class="flex-1 ml-4">
                         <p class="text-sm font-semibold">{value.title}</p>
-                        <p class="text-xs text-gray-500">{value.price.toFixed(2)} so'm</p>
+                        <p class="text-xs text-gray-500">
+                          {value.price.toFixed(2)} so'm
+                        </p>
                       </div>
                       <button class="text-gray-400 hover:text-gray-600">
                         <i
@@ -168,6 +188,40 @@ function Home() {
           </ul>
         </div>
       </div>
+      <div className="carousel mx-auto container w-[1200px] rounded-2xl">
+        {slides.map((slide, index) => (
+          <div
+            key={index}
+            className={`carousel-item relative w-full ${
+              index === current ? "block" : "hidden"
+            }`}
+          >
+            <img
+              src={slide}
+              className="w-full rounded-2xl"
+              alt={`Slide ${index + 1}`}
+            />
+            <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+              <button
+                onClick={() =>
+                  setCurrent(
+                    (prev) => (prev - 1 + slides.length) % slides.length
+                  )
+                }
+                className="btn btn-circle w-10 h-10 bg-white/40 border-white/100 cursor-pointer rounded-full"
+              >
+                ❮
+              </button>
+              <button
+                onClick={() => setCurrent((prev) => (prev + 1) % slides.length)}
+                className="btn btn-circle w-10 h-10 bg-white/40 border-white/100 cursor-pointer rounded-full"
+              >
+                ❯
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
       <div className="mx-auto container w-[1200px]">
         <ToastContainer />
         <div className="p-6 flex flex-wrap">
@@ -203,8 +257,10 @@ function Home() {
                       {data.price} so'm
                     </p>
                     <p className="text-lg font-bold">
-                      {(data.price -
-                        data.price * (data.discountPercentage / 100)).toFixed(2)}
+                      {(
+                        data.price -
+                        data.price * (data.discountPercentage / 100)
+                      ).toFixed(2)}
                     </p>
                   </div>
                   <button
