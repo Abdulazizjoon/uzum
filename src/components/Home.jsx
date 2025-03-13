@@ -6,6 +6,11 @@ import { toast, ToastContainer } from "react-toastify";
 import { addToCart, removeFromCart } from "../store/card";
 import { useDispatch, useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
+import bir from '../img/b.jpg'
+import ramadan from "../img/ramadan.jpg";
+import har from "../img/har.jpg";
+import uzum from "../img/uzum.jpg";
+import karta from "../img/karta.jpg";
 
 function Home() {
   let [data, setData] = useState([]);
@@ -17,11 +22,11 @@ function Home() {
   console.log(cards);
 
   const slides = [
-    "https://images.uzum.uz/cv3eg7ei4n36ls3t0770/main_page_banner.jpg",
-    "https://images.uzum.uz/cug7q9tht56sc95cis1g/main_page_banner.jpg",
-    "https://images.uzum.uz/cv4o265pb7f9qcng1frg/main_page_banner.jpg",
-    "https://images.uzum.uz/cuuoplei4n36ls3rla6g/main_page_banner.jpg",
-    "https://images.uzum.uz/cuuljv3vgbkm5ehgnhcg/main_page_banner.jpg",
+    `${bir}`,
+    `${ramadan}`,
+    `${har}`,
+    `${uzum}`,
+    `${karta}`,
   ];
 
   const [current, setCurrent] = useState(0);
@@ -188,7 +193,7 @@ function Home() {
           </ul>
         </div>
       </div>
-      <div className="carousel mx-auto container w-[1200px] rounded-2xl">
+      <div className="carousel h-[400px] mx-auto container w-[1200px] rounded-2xl">
         {slides.map((slide, index) => (
           <div
             key={index}
@@ -198,7 +203,7 @@ function Home() {
           >
             <img
               src={slide}
-              className="w-full rounded-2xl"
+              className="w-full h-[400px] bg-cover rounded-2xl"
               alt={`Slide ${index + 1}`}
             />
             <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
