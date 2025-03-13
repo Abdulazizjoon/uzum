@@ -1,12 +1,12 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import card from "../img/card.svg";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { addToCart, removeFromCart } from "../store/card";
 import { useDispatch, useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
-import bir from '../img/b.jpg'
+import bir from "../img/b.jpg";
 import ramadan from "../img/ramadan.jpg";
 import har from "../img/har.jpg";
 import uzum from "../img/uzum.jpg";
@@ -16,28 +16,36 @@ function Home() {
   let [data, setData] = useState([]);
   let [skip, setSkip] = useState(12);
   let [like, setLike] = useState([]);
+  let [search, setSearch] = useState("");
   let navigation = useNavigate();
   let dispatch = useDispatch();
   let cards = useSelector((state) => state.cart.cartItems);
-  console.log(cards);
-
-  const slides = [
-    `${bir}`,
-    `${ramadan}`,
-    `${har}`,
-    `${uzum}`,
-    `${karta}`,
-  ];
-
+  // console.log(cards);
+  const slides = [`${bir}`, `${ramadan}`, `${har}`, `${uzum}`, `${karta}`];
   const [current, setCurrent] = useState(0);
-
+  let ref = useRef()
+  
+  useEffect(function () {
+      let cards = Array.from(ref.current.querySelectorAll("div[data-title]"));
+    if (cards.length>0) {
+      cards.forEach((card) => {
+        if (!card.dataset.title.toLowerCase().includes(search.toLowerCase())) {
+          card.style.display = "none";
+        } else {
+          card.style.display = "block";
+        }
+      })
+    }
+    
+  },[search,data])
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % slides.length);
-    }, 3500);
+    }, 3500); 
 
     return () => clearInterval(interval);
   }, []);
+
   useEffect(
     function () {
       axios
@@ -51,7 +59,7 @@ function Home() {
     },
     [skip]
   );
-  console.log(data);
+  // console.log(data);
   function skipp() {
     setSkip((skip += 12));
   }
@@ -87,6 +95,9 @@ function Home() {
             Katalog
           </button>
           <input
+            onChange={(e) => {
+              setSearch(e.target.value);
+            }}
             type="text"
             placeholder="Mahsulotlar va turkumlar izlash"
             className="px-4 py-2 w-[450px] border rounded-lg"
@@ -105,27 +116,27 @@ function Home() {
             <span className="mr-8 ml-2.5">Saralangan</span>
           </div>
           <div className="relative group">
-            <div class="w-96 mx-auto hidden absolute bg-white shadow-lg rounded-2xl p-4 group-hover:block z-10 right-8 top-5">
+            <div className="w-96 mx-auto hidden absolute bg-white shadow-lg rounded-2xl p-4 group-hover:block z-10 right-8 top-5">
               {cards &&
                 cards.map((value, index) => {
                   return (
                     <div
                       key={index}
-                      class="flex items-center justify-between border-b pb-3 mb-3"
+                      className="flex items-center justify-between border-b pb-3 mb-3"
                     >
                       <img
                         src={value.images[0]}
-                        class="w-12 h-12 rounded-md object-cover"
+                        className="w-12 h-12 rounded-md object-cover"
                       />
-                      <div class="flex-1 ml-4">
-                        <p class="text-sm font-semibold">{value.title}</p>
-                        <p class="text-xs text-gray-500">
+                      <div className="flex-1 ml-4">
+                        <p className="text-sm font-semibold">{value.title}</p>
+                        <p className="text-xs text-gray-500">
                           {value.price.toFixed(2)} so'm
                         </p>
                       </div>
-                      <button class="text-gray-400 hover:text-gray-600">
+                      <button className="text-gray-400 hover:text-gray-600">
                         <i
-                          class="fa-solid fa-trash cursor-pointer"
+                          className="fa-solid fa-trash cursor-pointer"
                           onClick={() => dispatch(removeFromCart(value.id))}
                         ></i>
                       </button>
@@ -133,7 +144,7 @@ function Home() {
                   );
                 })}
 
-              <button class="w-full bg-purple-600 cursor-pointer text-white text-sm font-semibold py-3 rounded-md mt-4">
+              <button className="w-full bg-purple-600 cursor-pointer text-white text-sm font-semibold py-3 rounded-md mt-4">
                 Buyurtmani rasmiylashtirish
               </button>
             </div>
@@ -227,11 +238,12 @@ function Home() {
           </div>
         ))}
       </div>
-      <div className="mx-auto container w-[1200px]">
+      <div ref={ref} className="mx-auto container w-[1200px]">
         <ToastContainer />
         <div className="p-6 flex flex-wrap">
           {data.map((data) => (
             <div
+              data-title={data.title}
               onClick={() => details(data.id)}
               key={data.id}
               className="mx-auto scale-3d relative bg-white rounded-2xl hover:shadow-xl w-[250px] mb-6 shadow cursor-pointer border-gray-200"
@@ -249,6 +261,7 @@ function Home() {
                 ></i>
               )}
               <div className="p-4">
+                <h2>{ data.title}</h2>
                 <p className="text-xs mt-2 line-clamp-2">{data.description}</p>
                 <div className="text-[12px] flex items-center gap-1">
                   <i className="fa-solid fa-star text-[#FFB54C]"></i>
