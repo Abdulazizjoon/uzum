@@ -11,6 +11,7 @@ import ramadan from "../img/ramadan.jpg";
 import har from "../img/har.jpg";
 import uzum from "../img/uzum.jpg";
 import karta from "../img/karta.jpg";
+import { toggleLike } from "../store/like";
 
 function Home() {
   let [data, setData] = useState([]);
@@ -20,28 +21,37 @@ function Home() {
   let navigation = useNavigate();
   let dispatch = useDispatch();
   let cards = useSelector((state) => state.cart.cartItems);
+  const likedItems = useSelector((state) => state.like.likedItems);
   // console.log(cards);
   const slides = [`${bir}`, `${ramadan}`, `${har}`, `${uzum}`, `${karta}`];
   const [current, setCurrent] = useState(0);
-  let ref = useRef()
-  
-  useEffect(function () {
+  let ref = useRef();
+
+  function likes() {
+    navigation('/like')
+  }
+
+  useEffect(
+    function () {
       let cards = Array.from(ref.current.querySelectorAll("div[data-title]"));
-    if (cards.length>0) {
-      cards.forEach((card) => {
-        if (!card.dataset.title.toLowerCase().includes(search.toLowerCase())) {
-          card.style.display = "none";
-        } else {
-          card.style.display = "block";
-        }
-      })
-    }
-    
-  },[search,data])
+      if (cards.length > 0) {
+        cards.forEach((card) => {
+          if (
+            !card.dataset.title.toLowerCase().includes(search.toLowerCase())
+          ) {
+            card.style.display = "none";
+          } else {
+            card.style.display = "block";
+          }
+        });
+      }
+    },
+    [search, data]
+  );
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % slides.length);
-    }, 3500); 
+    }, 3500);
 
     return () => clearInterval(interval);
   }, []);
@@ -66,15 +76,11 @@ function Home() {
   function cart() {
     navigation("/card");
   }
-  function lik(e, id) {
-    // e.stopPropagation();
-
-    if (like.includes(id)) {
-      setLike((prevLike) => prevLike.filter((item) => item !== id));
-    } else {
-      setLike((prevLike) => [...prevLike, id]);
-    }
+  function lik(e, data) {
+    e.stopPropagation();
+    dispatch(toggleLike(data));
   }
+
   function details(id) {
     navigation(`/details/${id}`);
     localStorage.setItem("id", id);
@@ -111,7 +117,7 @@ function Home() {
             <i className="fa-regular fa-user"></i>
             <span className="mr-8 ml-2.5">Kirish</span>
           </div>
-          <div className="cursor-pointer">
+          <div className="cursor-pointer" onClick={likes}>
             <i className="fa-regular fa-heart"></i>
             <span className="mr-8 ml-2.5">Saralangan</span>
           </div>
@@ -249,19 +255,17 @@ function Home() {
               className="mx-auto scale-3d relative bg-white rounded-2xl hover:shadow-xl w-[250px] mb-6 shadow cursor-pointer border-gray-200"
             >
               <img src={data.images[0]} alt="" className="w-full h-[200px]" />
-              {like.includes(data.id) ? (
-                <i className="fa-solid fa-heart absolute top-5 right-5 text-red-500"></i>
-              ) : (
-                <i
-                  onClick={(event) => {
-                    lik(data.id);
-                    // event.stopPropagation();
-                  }}
-                  className="fa-regular absolute top-5 right-5 fa-heart"
-                ></i>
-              )}
+              <i
+                className={`absolute top-5 right-5 cursor-pointer ${
+                  likedItems.some((i) => i.id === data.id)
+                    ? "fa-solid fa-heart text-red-500"
+                    : "fa-regular fa-heart"
+                }`}
+                onClick={(event) => lik(event, data)} 
+              ></i>
+
               <div className="p-4">
-                <h2>{ data.title}</h2>
+                <h2>{data.title}</h2>
                 <p className="text-xs mt-2 line-clamp-2">{data.description}</p>
                 <div className="text-[12px] flex items-center gap-1">
                   <i className="fa-solid fa-star text-[#FFB54C]"></i>

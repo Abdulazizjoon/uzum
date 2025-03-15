@@ -5,6 +5,7 @@ import Layout from "./layouts/Layout";
 import Details from "./components/Details";
 import Card from "./components/Card";
 import ErorPage from "./components/ErorPage";
+import Like from "./components/Like";
 
 function App() {
   return (
@@ -31,6 +32,14 @@ function App() {
           element={
             <Layout>
               <Card></Card>
+            </Layout>
+          }
+        ></Route>
+        <Route
+          path="/like"
+          element={
+            <Layout>
+              <Like></Like>
             </Layout>
           }
         ></Route>
